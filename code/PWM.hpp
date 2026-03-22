@@ -23,6 +23,9 @@ uint8_t Servo_Pan = 0; // int used to set the servo for the first arm joint
 uint8_t Servo_Tilt = 1; // int used to set the servo for the second arm joint
 uint8_t Servo_Cam1 = 2; // int used to set the servo for the third arm joint
 
+int Pan_Angle = 0;
+int Tilt_Angle = 0;
+
 void SetUp_PWM();
 
 

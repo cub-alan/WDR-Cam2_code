@@ -40,6 +40,21 @@ void setup() {
 }
 
 void loop() {
- 
+
+  if (Pan_Angle == 360){
+    Pan_Angle = 0;
+  }
+  if (Tilt_Angle == 360){
+    Tilt_Angle = 0;
+  }
+
+  moveServo(Servo_Pan, Pan_Angle);
+  moveServo(Servo_Tilt, Tilt_Angle);
+
+  while (Pan_Angle != 360){
+    Pan_Angle = Pan_Angle + 10; 
+  }
+
+  Tilt_Angle = Tilt_Angle + 10;
 
 }
