@@ -32,7 +32,7 @@
 //initialise the Cam.cpp functions
 extern bool camera_initialized;
 extern httpd_handle_t Server;
-void Cam1_init();
+void Cam2_init();
 esp_err_t Cam_Stream_Handler(httpd_req_t *req);
 
 #endif

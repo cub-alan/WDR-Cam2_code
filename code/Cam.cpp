@@ -7,7 +7,7 @@ bool camera_initialized = false;
 
 // create a funtion to handle the stream and return any esp errors and points to the http request object
 
-void Cam1_init() {
+void Cam2_init() {
     //Pin configuration were taken from the camera webserver example code and adjusted where nessesary
     camera_config_t config;
     config.ledc_channel = LEDC_CHANNEL_0;

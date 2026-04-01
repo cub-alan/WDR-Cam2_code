@@ -30,10 +30,7 @@ void setup() {
   }
 
   Serial.println("");
-  Serial.println("WiFi connected"); // print once wifi is connected
-
-  Cam2_Server_Init(); // connect the gnss data stream and camera data stream to the wifi
-
+  Serial.println("WiFi connected"); // print once wifi is connect
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP()); // paste the ip of the stream so it can be opened on the browser
   
