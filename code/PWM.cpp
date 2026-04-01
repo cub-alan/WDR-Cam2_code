@@ -1,5 +1,6 @@
 //
 //
+#include "PWM.hpp"
 
 void SetUp_PWM(){
   pwm.begin(); // sets up the PWM for the board
@@ -18,7 +19,7 @@ void moveServo(int servo_ARM, float angle) {
       angle = 180; // set the angle to 180
       }
     
-    int pulse_length = map(angle, 0, 180, MID_SERVOMIN, MID_SERVOMAX); // conver the angle to a pulse length
+    int pulse_length = map(angle, 0, 180, SERVOMIN, SERVOMAX); // conver the angle to a pulse length
 
     pwm.setPWM(servo_ARM, 0, pulse_length); // move the servo to that angle
     delay(500); // add a half a second delay to allow arm to stop in place before moving again
