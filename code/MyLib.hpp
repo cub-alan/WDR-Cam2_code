@@ -5,5 +5,7 @@
 
 #include "Cam.hpp"
 #include "PWM.hpp"
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
 
 #endif

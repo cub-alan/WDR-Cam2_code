@@ -2,6 +2,15 @@
 //
 #include "PWM.hpp"
 
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+uint8_t Servo_Pan = 0; 
+uint8_t Servo_Tilt = 1; 
+uint8_t Servo_Cam1 = 2; 
+
+int Pan_Angle = 0;
+int Tilt_Angle = 0;
+
 void SetUp_PWM(){
   pwm.begin(); // sets up the PWM for the board
 

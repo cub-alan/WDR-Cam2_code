@@ -10,6 +10,7 @@ void setup() {
   
   Serial.begin(115200); // set the terminal baud rate and begin the terminal
   Serial.setDebugOutput(true);
+
   for(int i=0;i<40;i++){
     Serial.println(); // clear 40 lines of the terminal 
   } 
@@ -31,6 +32,9 @@ void setup() {
 
   Serial.println("");
   Serial.println("WiFi connected"); // print once wifi is connect
+
+  Cam2_Server_Init(); 
+    
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP()); // paste the ip of the stream so it can be opened on the browser
   
