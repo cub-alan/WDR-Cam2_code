@@ -130,8 +130,8 @@ esp_err_t Cam_Stream_Handler(httpd_req_t *req) {
 void Cam2_Server_Init() {
 
   httpd_config_t Cam2_Server_Config = HTTPD_DEFAULT_CONFIG(); // create a variable to save all server info/ settings
-  Cam2_Server_Config.server_port = 81; // set the webservers pot to number 80 which is standard
-  Cam2_Server_Config.core_id = 0;
+  Cam2_Server_Config.server_port = 80; // set the webservers pot to number 80 which is standard
+  Cam2_Server_Config.core_id = 0; // pin the camera to core 0
 
   // create a variable and store the cameras URL in it for streaming and to asses the cams veiw
   static httpd_uri_t Stream_URI = {.uri = "/stream", .method = HTTP_GET, .handler = Cam_Stream_Handler, .user_ctx  = NULL}; 
