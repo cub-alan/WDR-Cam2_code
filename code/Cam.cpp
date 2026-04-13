@@ -134,7 +134,7 @@ void Cam2_Server_Init() {
   Cam2_Server_Config.core_id = 0; // pin the camera to core 0
 
   // create a variable and store the cameras URL in it for streaming and to asses the cams veiw
-  static httpd_uri_t Stream_URI = {.uri = "/stream", .method = HTTP_GET, .handler = Cam_Stream_Handler, .user_ctx  = NULL}; 
+  static httpd_uri_t Stream_URI = {.uri = "/stream2", .method = HTTP_GET, .handler = Cam_Stream_Handler, .user_ctx  = NULL}; 
   
   // Start the server
   if (httpd_start(&Server, &Cam2_Server_Config) == ESP_OK) { //check everything is set up correctly start the server
