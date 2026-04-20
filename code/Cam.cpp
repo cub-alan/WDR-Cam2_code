@@ -4,7 +4,6 @@
 #include "Cam.hpp" // include the hpp file so it has acess to all nessesary librarys
 
 bool camera_initialized = false;
-httpd_handle_t Server = NULL;
 
 // create a funtion to handle the stream and return any esp errors and points to the http request object
 
@@ -31,11 +30,12 @@ void Cam2_init() {
     config.pin_reset = RESET_GPIO_NUM;
     config.xclk_freq_hz = 10000000;
     
-    // Initialize directly at QVGA for stability and memory efficiency
+    // Initialize as QQVGA Jpeg for efficiency and stability when initialising
     config.pixel_format = PIXFORMAT_JPEG;
     config.frame_size = FRAMESIZE_QQVGA; // start at lower fram size 
 
-    if (psramFound()) {
+    if (psramFound()) { // if Psram is active
+        // increase to QVGA with an improved quality and 
         config.frame_size = FRAMESIZE_QVGA;
         config.jpeg_quality = 10;
         config.fb_count = 2;
@@ -43,7 +43,8 @@ void Cam2_init() {
         config.grab_mode = CAMERA_GRAB_LATEST;
         Serial.println("PSRAM working");
     }   
-     else {
+     else { // if no Psram
+        //initialise to QVGA at a lower qulity
         config.frame_size = FRAMESIZE_QVGA;
         config.jpeg_quality = 12;
         config.fb_count = 1;
@@ -51,95 +52,34 @@ void Cam2_init() {
         Serial.println("PSRAM failed");
     }
 
-    esp_err_t err = esp_camera_init(&config);
-    if (err != ESP_OK) {
-        Serial.printf("Camera init failed with error 0x%x\n", err);
+    esp_err_t err = esp_camera_init(&config); // create esp error code fetcher
+    if (err != ESP_OK) { // if init failed print the error and set keep init at false
+        Serial.printf("Camera init fail: 0x%x\n", err);
         camera_initialized = false;
         return;
     }
-    
-    Serial.println("Camera init succeeded");
-    camera_initialized = true;
+    else{ // if init succede set the variable to true
+        Serial.println("Camera init succeeded");
+        camera_initialized = true;
+    }
 
     // Wait a moment for the sensor to stabilize
     delay(500);
 
-    sensor_t * sens = esp_camera_sensor_get();
+    sensor_t * sens = esp_camera_sensor_get();  // get the senso for the camera module
     if (sens) {
-        sens->set_vflip(sens, 0);      // Flip vertically if needed
-        sens->set_hmirror(sens, 0);    // Horizontal mirror
-        sens->set_brightness(sens, 0); // Default brightness
-        sens->set_contrast(sens, 0);   // Default contrast
+        // set the values for the various camera specs
+        sens->set_vflip(sens, 1);
+        sens->set_hmirror(sens, 0);
+        sens->set_brightness(sens, -2);
+        sens->set_contrast(sens, 1); 
     }
-    camera_fb_t * fb = esp_camera_fb_get();
 
-    if (!fb) {
+    camera_fb_t * fb = esp_camera_fb_get(); // get the matrix for the current frame of the camera 
+    if (!fb) { // if the matrix is empty or not fetched
         Serial.println("CAMERA CAPTURE FAILED");
     }   
-    else {
-        Serial.printf("CAMERA FRAME OK: %d bytes\n", fb->len);
-        esp_camera_fb_return(fb);
+    else { // if matrix recieved
+        esp_camera_fb_return(fb); // set fb as the frame
     }
 }
-esp_err_t Cam_Stream_Handler(httpd_req_t *req) {
-    camera_fb_t * fb = NULL;
-    esp_err_t res = ESP_OK;
-
-    res = httpd_resp_set_type(req, "multipart/x-mixed-replace; boundary=frame");
-    if(res != ESP_OK) return res;
-
-    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-
-    while(true) {
-        fb = esp_camera_fb_get();
-        if (!fb) {
-            Serial.println("Camera capture failed");
-            res = ESP_FAIL;
-            break;
-        }
-
-        // Send boundary
-        res = httpd_resp_send_chunk(req, "--frame\r\n", 9);
-
-        // Send headers
-        if(res == ESP_OK) {
-            char part_buf[128];
-            int len = snprintf(part_buf, sizeof(part_buf),"Content-Type: image/jpeg\r\n" "Content-Length: %u\r\n\r\n",fb->len);
-            res = httpd_resp_send_chunk(req, part_buf, len);
-        }
-
-        // Send image
-        if(res == ESP_OK) {
-            res = httpd_resp_send_chunk(req, (const char *)fb->buf, fb->len);
-        }
-
-        // End frame
-        if(res == ESP_OK) {
-            res = httpd_resp_send_chunk(req, "\r\n", 2);
-        }
-
-        esp_camera_fb_return(fb);
-
-        if(res != ESP_OK) break;
-
-        vTaskDelay(10 / portTICK_PERIOD_MS);
-    }
-
-    return res;
-}
-void Cam2_Server_Init() {
-
-  httpd_config_t Cam2_Server_Config = HTTPD_DEFAULT_CONFIG(); // create a variable to save all server info/ settings
-  Cam2_Server_Config.server_port = 80; // set the webservers pot to number 80 which is standard
-  Cam2_Server_Config.core_id = 0; // pin the camera to core 0
-
-  // create a variable and store the cameras URL in it for streaming and to asses the cams veiw
-  static httpd_uri_t Stream_URI = {.uri = "/stream2", .method = HTTP_GET, .handler = Cam_Stream_Handler, .user_ctx  = NULL}; 
-  
-  // Start the server
-  if (httpd_start(&Server, &Cam2_Server_Config) == ESP_OK) { //check everything is set up correctly start the server
-    httpd_register_uri_handler(Server, &Stream_URI); // create the cameras page on the server 
-    Serial.println("Camera 2 server began"); // print to the terminal so you now the server is ready
-  }
-}
-
