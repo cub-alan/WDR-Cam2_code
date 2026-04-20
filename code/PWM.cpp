@@ -1,12 +1,13 @@
+//Jacob Holwill 10859926
 //
-//
+
 #include "PWM.hpp"
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
-#define Servo_Pan = 0; 
-#define Servo_Tilt = 1; 
-#define Servo_Cam1 = 2; 
+#define Servo_Pan = 0
+#define Servo_Tilt = 1 
+#define Servo_Cam1 = 2 
 
 int Pan_Angle = 0;
 int Tilt_Angle = 0;
@@ -38,7 +39,7 @@ void moveServo(int servo_ARM, float angle) {
 
 void Servo_Task(){
 
-  While(True){
+  while(true){
 
   }
 }

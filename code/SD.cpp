@@ -1,3 +1,6 @@
+//Jacob Holwill 10859926
+//
+
 void SD_Init() {
     if (!SD.begin()) { // if the SD card fails to start skip
         Serial.println("SD init failed");

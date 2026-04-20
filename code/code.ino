@@ -1,10 +1,10 @@
-//
+//Jacob Holwill 10859926
 //
 
 #include "MyLib.hpp"
 
 #define Sample_Sync_Pin D1 // offline image sync between cams
-volitile uint32_t sample_id = 0; // id to match data from same sample
+volatile uint32_t sample_id = 0; // id to match data from same sample
 
 void setup() {
   
@@ -30,7 +30,7 @@ void setup() {
   WIFI_Connect(); // attempt to connect to the wifi
   
   if (WiFi.status() == WL_CONNECTED){ // if wifi is connected
-    Cam1_Server_Init(); // initialise the server for camera 1
+    Cam2_Server_Init(); // initialise the server for camera 1
     currentMode = MODE_WIFI; // set the mode to WIFI
 
     // print out the weblinks for the Camera and gnss
@@ -45,4 +45,7 @@ void setup() {
 void loop() {
 
   
+
+  Light_Check();
+  vTaskDelay(pdMS_TO_TICKS(10));
 }
