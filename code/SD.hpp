@@ -8,7 +8,7 @@
 #include <Arduino.h>
 #include <HTTPClient.h>
 #include "FS.h"
-#include "SD.h"
+#include "SD_MMC.h"
 #include "esp_http_server.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
@@ -22,5 +22,7 @@ void SD_Stop_Sending();
 esp_err_t SD_List_Handler(httpd_req_t *req);
 esp_err_t SD_File_Handler(httpd_req_t *req);
 esp_err_t SD_Delete_Handler(httpd_req_t *req);
+
+extern SemaphoreHandle_t SDMutex;
 
 #endif

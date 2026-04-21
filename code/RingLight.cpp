@@ -7,6 +7,8 @@
 static int LDR_Count = 0;
 static int LDR_Ave = 0;
 
+Adafruit_NeoPixel Ring(NUM_LEDS, RINGLIGHT_PIN, NEO_GRBW + NEO_KHZ800);
+
 void Light_init() {
 
     pinMode(LDR_PIN, INPUT); // set the LDR into input mode on pin D0
@@ -27,7 +29,7 @@ void Light_Check() {
 
             // set each LED of the ring to pure white
             for (int i = 0; i < NUM_LEDS; i++) { 
-                Ring.setPixelColor(i, Ring.Color(0, 0, 0, 255)); 
+                Ring.setPixelColor(i, Ring.Color(255, 255, 255)); 
             }
             Ring.show(); // show the set values
         }

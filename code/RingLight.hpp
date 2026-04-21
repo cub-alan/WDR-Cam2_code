@@ -15,8 +15,7 @@
 #define LED_MAX 255
 #define LED_MIN 10
 
-
-Adafruit_NeoPixel Ring(NUM_LEDS, RINGLIGHT_PIN, NEO_GRBW + NEO_KHZ800); // set the ring light
+extern Adafruit_NeoPixel Ring;
 
 //initialise the light functions
 void Light_init();
