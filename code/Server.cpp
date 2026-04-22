@@ -4,9 +4,13 @@
 #include "Server.hpp"
 #include "SD.hpp"
 
+//testing WIFI
+const char* ssid = "iPhone"; 
+const char* password = "12345678";
+
 // set the ssid and password 
-const char* ssid = "Robot-Stu1"; 
-const char* password = "WANUT8PTODAY";
+//const char* ssid = "Robot-Stu1"; 
+//const char* password = "WANUT8PTODAY";
 
 httpd_handle_t Server = NULL; // create the server handle and set it to null
 esp_err_t Cam_Stream_Handler(httpd_req_t *req) { // function that runs when cam stream  is open
