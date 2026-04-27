@@ -2,7 +2,7 @@
 //
 
 #ifndef MYLIB_HPP
-#define MY_LIB_HPP
+#define MYLIB_HPP
 
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>

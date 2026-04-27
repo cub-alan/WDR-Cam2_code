@@ -61,7 +61,8 @@ bool Send_File(File file) {
 
     // Set headers
     http.addHeader("Content-Type", "application/octet-stream");
-    http.addHeader("File-Name", String(file.name()));
+    http.addHeader("File-Name", "cam2_" + String(file.name()));
+    http.addHeader("Camera-ID", "cam2");
 
     int fileSize = file.size();
 
