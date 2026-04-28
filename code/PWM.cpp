@@ -5,10 +5,12 @@
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
+// set the Servo numbers
 int Servo_Pan = 0;
 int Servo_Tilt = 1; 
 int Servo_Cam1 = 2;
 
+// set the servo startin gpositions
 int Pan_Start_Angle = 70;
 int Tilt_Start_Angle = 50;
 int Cam1_Start_Angle = 40;
@@ -40,24 +42,24 @@ void moveServo(int servo_ARM, float angle) {
 
 void Servo_Task(void *param){
   while(true){
-     for (int i = 0; i<40;i = i + 4){
+     for (int i = 0; i<40;i = i + 4){ // move tilt 4 degrees one direction until its moved 40 degrees
       moveServo(Servo_Tilt, Tilt_Start_Angle+i);
-      for (int j = 0; j<40;j++){
+      for (int j = 0; j<40;j++){ // move both panning servos 1 degree until they reach 40 degrees
         moveServo(Servo_Pan, Pan_Start_Angle+j);
         moveServo(Servo_Cam1, 40+j);
       }
-      for (int j = 40; j>1;j--){
+      for (int j = 40; j>1;j--){// move both panning servos 1 degree until they moved back 40 degrees 40 degrees
         moveServo(Servo_Pan, Pan_Start_Angle+j);
         moveServo(Servo_Cam1, 40+j);
       }
     }
-    for (int i = 40; i>1;i=i-4){
+    for (int i = 40; i>1;i=i-4){ // move tilt 4 degrees one direction until its moved back 40 degrees
       moveServo(Servo_Tilt, Tilt_Start_Angle+i);
-      for (int j = 0; j<40;j++){
+      for (int j = 0; j<40;j++){ // move both panning servos 1 degree until they reach 40 degrees
         moveServo(Servo_Pan, Pan_Start_Angle+j);
         moveServo(Servo_Cam1, 40+j);
       }
-      for (int j = 40; j>1;j--){
+      for (int j = 40; j>1;j--){ // move both panning servos 1 degree until they moved back 40 degrees 40 degrees
         moveServo(Servo_Pan, Pan_Start_Angle+j);
         moveServo(Servo_Cam1, 40+j);
       }

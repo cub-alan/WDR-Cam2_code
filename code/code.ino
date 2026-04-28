@@ -1,5 +1,5 @@
 //Jacob Holwill 10859926
-//
+//this file is to intergrate my other code together to create the initialisation and loop for the camera 2 operation
 
 #include "MyLib.hpp"
 
@@ -57,58 +57,57 @@ void setup() {
 }
 
 void Trigger_Sample() {
-  if (!xSemaphoreTake(SDMutex, pdMS_TO_TICKS(100))) {
+  if (!xSemaphoreTake(SDMutex, pdMS_TO_TICKS(100))) { // if SD mutex is not free return
     return;
   }
-  sample_id++;
+  sample_id++; // add one to sample id
   
-  camera_fb_t *fb = esp_camera_fb_get();
-  if (fb) {
-    String filename = "/cam2_" + String(sample_id) + ".jpg";
-    File file = SD_MMC.open(filename, FILE_WRITE);
-    if (file) {
-      file.write(fb->buf, fb->len);
-      file.close();
+  camera_fb_t *fb = esp_camera_fb_get(); // get the current fram
+  if (fb) { // if frame received
+    String filename = "/cam2_" + String(sample_id) + ".jpg"; // create the file name
+    File file = SD_MMC.open(filename, FILE_WRITE); // create a file with that frame to SD card with that name
+    if (file) { //if file create was succesful 
+      file.write(fb->buf, fb->len); // write the file 
+      file.close(); // close it
     }
-    esp_camera_fb_return(fb);
+    esp_camera_fb_return(fb); // return the frame
   }
-  xSemaphoreGive(SDMutex);
+  xSemaphoreGive(SDMutex); // relock the mutex
 }
 
 void loop() {
   static bool server_running = (WiFi.status() == WL_CONNECTED);
   static unsigned long WIFI_Retry = 0;
 
-  Light_Check();
+  Light_Check(); // run ring light code
 
-  if (WiFi.status() == WL_CONNECTED){
-    if (currentMode != MODE_WIFI){
-      currentMode = MODE_WIFI;
+  if (WiFi.status() == WL_CONNECTED){ //  if wifi is connected
+    if (currentMode != MODE_WIFI){ // if current mode is not wifi
+      currentMode = MODE_WIFI; // swap mode
       Serial.println("Switched to WIFI mode");
-      Cam2_Server_Init();
+      Cam2_Server_Init(); // start the server
       server_running = true;
-      SD_Start_Sending();
     }
   } 
-  else {
-    if (currentMode != MODE_SD){
-      currentMode = MODE_SD;
+  else { // if wifi not connected
+    if (currentMode != MODE_SD){ // if not in SD mode
+      currentMode = MODE_SD; //swap mode
       Serial.println("Switched to SD mode");
-      SD_Stop_Sending();
-      if (server_running) {
-        httpd_stop(Server);
+      SD_Stop_Sending(); // stop sending SD data
+      if (server_running) { // check if the server is running
+        httpd_stop(Server); // stop the server
         server_running = false;
       }
     }
   }
-  if (WiFi.status() == WL_DISCONNECTED && millis() - WIFI_Retry > 5000) {
+  if (WiFi.status() == WL_DISCONNECTED && millis() - WIFI_Retry > 5000) { // attempt to reconect to wifi every 5 seconds
     WIFI_Retry = millis();
-    WiFi.disconnect(true);
-    WiFi.begin(ssid, password);
+    WiFi.disconnect(true); // disconect
+    WiFi.begin(ssid, password); // reconect
   }
 
-  if (Trigger_Flaged){
-    Trigger_Sample();
+  if (Trigger_Flaged){ // if a sample is triggered from the other esp
+    Trigger_Sample(); // execture sampling function
     Trigger_Flaged = false;
   }
   vTaskDelay(pdMS_TO_TICKS(10));
